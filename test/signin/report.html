@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login API QA Report</title>
+  <style>
+    :root {
+      --pass: #047857;
+      --fail: #b91c1c;
+      --border: #e5e7eb;
+      --muted: #6b7280;
+      --bg: #f9fafb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      color: #111827;
+      background: #f3f4f6;
+    }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+    .header {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    .meta { color: var(--muted); line-height: 1.6; }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .card .label { color: var(--muted); font-size: 13px; margin-bottom: 6px; }
+    .card .value { font-size: 28px; font-weight: 700; }
+    .card.pass .value { color: var(--pass); }
+    .card.fail .value { color: var(--fail); }
+    .table-wrap {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: auto;
+    }
+    table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: var(--bg);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #374151;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr.failed { background: #fef2f2; }
+    tr.passed { background: #f0fdf4; }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge.pass { background: #d1fae5; color: #065f46; }
+    .badge.fail { background: #fee2e2; color: #991b1b; }
+    .test-title { font-weight: 600; margin-bottom: 4px; }
+    .test-id { color: var(--muted); font-size: 13px; }
+    code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Login API QA Report</h1>
+      <div class="meta">
+        <div>Scope: backend only — Category: <strong>API, Both</strong></div>
+        <div>Endpoint: <code>https://sixsense-team-pulse-backend-test.onrender.com/auth/login</code></div>
+        <div>Worksheet: <code>Sign In</code></div>
+        <div>Spreadsheet: <code>1GclLi3Zz2On056P894PyhGJ59DhTbYozvwx3DGqtFMc</code></div>
+        <div>Generated: 2026-07-02 10:16:49 UTC</div>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="card"><div class="label">Total</div><div class="value">9</div></div>
+      <div class="card pass"><div class="label">Passed</div><div class="value">9</div></div>
+      <div class="card fail"><div class="label">Failed</div><div class="value">0</div></div>
+      <div class="card"><div class="label">Pass Rate</div><div class="value">100%</div></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Test</th>
+            <th>Category</th>
+            <th>Result</th>
+            <th>Request</th>
+            <th>Expected</th>
+            <th>Actual</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+      <tr class="passed">
+        <td>
+          <div class="test-title">Verify user can sign in with valid email and password</div>
+          <div class="test-id">TC_010 · row 11</div>
+          <div class="test-id">Hoppscotch: cmr38yenx04yu11tkvmj9lmvz</div>
+        </td>
+        <td>Both</td>
+        <td><span class="badge pass">Pass</span></td>
+        <td><pre>{&quot;emailAddress&quot;:&quot;mohammadalamin.cse@gmail.com&quot;,&quot;password&quot;:&quot;Samanta123@&quot;}</pre></td>
+        <td><pre>status in: 200, 201
+token: present
+sheet: User should be signed in successfully</pre></td>
+        <td><pre>HTTP 201
+{&quot;userInfo&quot;:{&quot;_id&quot;:&quot;6a4379317010f5f14ddf4cd5&quot;,&quot;displayName&quot;:&quot;Al Amin-HR&quot;,&quot;emailAddress&quot;:&quot;mohammadalamin.cse@gmail.com&quot;,&quot;isVerified&quot;:true,&quot;jiraId&quot;:&quot;&quot;,&quot;trelloId&quot;:&quot;&quot;,&quot;githubUserName&quot;:&quot;&quot;,&quot;isInvited&quot;:true,&quot;isDisabled&quot;:false,&quot;avatarUrls&quot;:&quot;https://i.ibb.co/6J1Tn7Xc/user-8664801.png&quot;,&quot;joiningDate&quot;:&quot;2026-06-30T00:00:00.000Z&quot;,&quot;createdAt&quot;:&quot;2026-06-30T08:07:13.057Z&quot;,&quot;updatedAt&quot;:&quot;2026-07-02T02:40:22.235Z&quot;,&quot;__v&quot;:0,&quot;departmentId&quot;:&quot;69a16a8e90f6056da4faa747&quot;,&quot;designation&quot;:&quot;No designation&quot;,&quot;hasOrganization&quot;:true,&quot;role&quot;:&quot;hr&quot;},&quot;accessToken&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsImlhdCI6MTc4Mjk4NzM5MSwiZXhwIjoyMzgyOTg3MzkxfQ.P0j_51h9-oOhzS6jc4F3nFKKb1GGlpxfOJsQ80nTJ4c&quot;,&quot;refreshToken&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsInNlc3Npb25JZCI6IjZhNDYzYTdmZmFlYjM3ZGUwYmY2Yzc0ZCIsImlhdCI6MTc4Mjk4NzM5MSwiZXhwIjo2MTc4Mjk4NzM5MX0.vOg7Jdytsv6cWD7BGfxVsQSRBuQtjkpjxShuiTH9PLk&quot;}</pre></td>
+        <td>—</td>
+      </tr>
+
+      <tr class="passed">
+        <td>
+          <div class="test-title">Verify user cannot sign in with wrong password</div>
+          <div class="test-id">TC_011 · row 12</div>
+          <div class="test-id">Hoppscotch: cmr38yf8704yv11tk946xqx5w</div>
+        </td>
+        <td>Both</td>
+        <td><span class="badge pass">Pass</span></td>
+        <td><pre>{&quot;emailAddress&quot;:&quot;mohammadalamin.cse@gmail.com&quot;,&quot;password&quot;:&quot;Samanta12##&quot;}</pre></td>
+        <td><pre>status in: 400, 401, 403
+token: absent
+sheet: Login should fail with proper error message</pre></td>
+        <td><pre>HTTP 400
+{&quot;message&quot;:&quot;Invalid Credentials&quot;,&quot;error&quot;:&quot;Bad Request&quot;,&quot;statusCode&quot;:400}</pre></td>
+        <td>—</td>
+      </tr>
+
+      <tr class="passed">
+        <td>
+          <div class="test-title">Verify user cannot sign in with an unregistered email</div>
+          <div class="test-id">TC_012 · row 13</div>
+          <div class="test-id">Hoppscotch: cmr38yft604yw11tk8ikm78pc</div>
+        </td>
+        <td>Both</td>
+        <td><span class="badge pass">Pass</span></td>
+        <td><pre>{&quot;emailAddress&quot;:&quot;dayipej887@asitrai.com&quot;,&quot;password&quot;:&quot;Samanta123@&quot;}</pre></td>
+        <td><pre>status in: 400, 401, 403
+error contains: credential|invalid|unauthorized|exist|not found
+token: absent
+sheet: Login should fail with invalid credentials message</pre></td>
+        <td><pre>HTTP 400
+{&quot;message&quot;:&quot;User does not exist&quot;,&quot;error&quot;:&quot;Bad Request&quot;,&quot;statusCode&quot;:400}</pre></td>
+        <td>—</td>
+      </tr>
+
+      <tr class="passed">
+        <td>
+          <div class="test-title">Verify system handles leading and trailing spaces in email</div>
+          <div class="test-id">TC_013 · row 14</div>
+          <div class="test-id">Hoppscotch: cmr38ygdi04yx11tkpoepncnl</div>
+        </td>
+        <td>Both</td>
+        <td><span class="badge pass">Pass</span></td>
+        <td><pre>{&quot;emailAddress&quot;:&quot;mohammadalamin.cse@gmail.com&quot;,&quot;password&quot;:&quot;Samanta123@&quot;}</pre></td>
+        <td><pre>status in: 200, 201
+token: present
+sheet: System should trim spaces and process login correctly</pre></td>
+        <td><pre>HTTP 201
+{&quot;userInfo&quot;:{&quot;_id&quot;:&quot;6a4379317010f5f14ddf4cd5&quot;,&quot;displayName&quot;:&quot;Al Amin-HR&quot;,&quot;emailAddress&quot;:&quot;mohammadalamin.cse@gmail.com&quot;,&quot;isVerified&quot;:true,&quot;jiraId&quot;:&quot;&quot;,&quot;trelloId&quot;:&quot;&quot;,&quot;githubUserName&quot;:&quot;&quot;,&quot;isInvited&quot;:true,&quot;isDisabled&quot;:false,&quot;avatarUrls&quot;:&quot;https://i.ibb.co/6J1Tn7Xc/user-8664801.png&quot;,&quot;joiningDate&quot;:&quot;2026-06-30T00:00:00.000Z&quot;,&quot;createdAt&quot;:&quot;2026-06-30T08:07:13.057Z&quot;,&quot;updatedAt&quot;:&quot;2026-07-02T02:40:22.235Z&quot;,&quot;__v&quot;:0,&quot;departmentId&quot;:&quot;69a16a8e90f6056da4faa747&quot;,&quot;designation&quot;:&quot;No designation&quot;,&quot;hasOrganization&quot;:true,&quot;role&quot;:&quot;hr&quot;},&quot;accessToken&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsImlhdCI6MTc4Mjk4NzM5NywiZXhwIjoyMzgyOTg3Mzk3fQ.6BBKBgstcR_BX157pbJfIzWarO2ZaLOSxY19z-TPNsg&quot;,&quot;refreshToken&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsInNlc3Npb25JZCI6IjZhNDYzYTg1ZmFlYjM3ZGUwYmY2Yzc1YSIsImlhdCI6MTc4Mjk4NzM5NywiZXhwIjo2MTc4Mjk4NzM5N30.Ku-WAjtBz2AR3t8SYVUC6iqZtRZWXYdj6DXGGTCRiWU&quot;}</pre></td>
+        <td>—</td>
+      </tr>
+
+      <tr class="passed">
+        <td>
+          <div class="test-title">Verify error message is displayed after failed login</div>
+          <div class="test-id">TC_014 · row 15</div>
+          <div class="test-id">Hoppscotch: cmr38ygxo04yy11tk6mbal1al</div>
+        </td>
+        <td>Both</td>
+        <td><span class="badge pass">Pass</span></td>
+        <td><pre>{&quot;emailAddress&quot;:&quot;mohammadalamin.cse@gmail.com&quot;,&quot;password&quot;:&quot;Samanta12##&quot;}</pre></td>
+        <td><pre>status in: 400, 401, 403
+token: absent
+sheet: Error message should be visible on the sign in page</pre></td>
+        <td><pre>HTTP 400
+{&quot;message&quot;:&quot;Invalid Credentials&quot;,&quot;error&quot;:&quot;Bad Request&quot;,&quot;statusCode&quot;:400}</pre></td>
+        <td>—</td>
+      </tr>
+
+      <tr class="passed">
+        <td>
+          <div class="test-title">Verify error message clears after correcting login data</div>
+          <div class="test-id">TC_015 · row 16</div>
+          <div class="test-id">Hoppscotch: cmr38yhic04yz11tk1eib5hcc</div>
+        </td>
+        <td>Both</td>
+        <td><span class="badge pass">Pass</span></td>
+        <td><pre>{&quot;emailAddress&quot;:&quot;mohammadalamin.cse@gmail.com&quot;,&quot;password&quot;:&quot;Samanta123@&quot;}</pre></td>
+        <td><pre>status in: 200, 201
+token: present
+sheet: Error should be removed and user should be signed in</pre></td>
+        <td><pre>HTTP 201
+{&quot;userInfo&quot;:{&quot;_id&quot;:&quot;6a4379317010f5f14ddf4cd5&quot;,&quot;displayName&quot;:&quot;Al Amin-HR&quot;,&quot;emailAddress&quot;:&quot;mohammadalamin.cse@gmail.com&quot;,&quot;isVerified&quot;:true,&quot;jiraId&quot;:&quot;&quot;,&quot;trelloId&quot;:&quot;&quot;,&quot;githubUserName&quot;:&quot;&quot;,&quot;isInvited&quot;:true,&quot;isDisabled&quot;:false,&quot;avatarUrls&quot;:&quot;https://i.ibb.co/6J1Tn7Xc/user-8664801.png&quot;,&quot;joiningDate&quot;:&quot;2026-06-30T00:00:00.000Z&quot;,&quot;createdAt&quot;:&quot;2026-06-30T08:07:13.057Z&quot;,&quot;updatedAt&quot;:&quot;2026-07-02T02:40:22.235Z&quot;,&quot;__v&quot;:0,&quot;departmentId&quot;:&quot;69a16a8e90f6056da4faa747&quot;,&quot;designation&quot;:&quot;No designation&quot;,&quot;hasOrganization&quot;:true,&quot;role&quot;:&quot;hr&quot;},&quot;accessToken&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsImlhdCI6MTc4Mjk4NzQwMSwiZXhwIjoyMzgyOTg3NDAxfQ.VQf6L91V4YmJzCjeF09REGIBX-lDLSUBP8TpdguC0O8&quot;,&quot;refreshToken&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsInNlc3Npb25JZCI6IjZhNDYzYTg5ZmFlYjM3ZGUwYmY2Yzc2NiIsImlhdCI6MTc4Mjk4NzQwMSwiZXhwIjo2MTc4Mjk4NzQwMX0.vQ8xxPwNpWsVoQ6pyW7k6xwtNhki73Cbxqtd_kqC8rU&quot;}</pre></td>
+        <td>—</td>
+      </tr>
+
+      <tr class="passed">
+        <td>
+          <div class="test-title">Verify login API returns success for valid credentials</div>
+          <div class="test-id">TC_016 · row 17</div>
+          <div class="test-id">Hoppscotch: cmr38yi3304z011tkrkv69atg</div>
+        </td>
+        <td>API</td>
+        <td><span class="badge pass">Pass</span></td>
+        <td><pre>{&quot;emailAddress&quot;:&quot;mohammadalamin.cse@gmail.com&quot;,&quot;password&quot;:&quot;Samanta123@&quot;}</pre></td>
+        <td><pre>status in: 200, 201
+token: present
+sheet: API should return success response with token/user data</pre></td>
+        <td><pre>HTTP 201
+{&quot;userInfo&quot;:{&quot;_id&quot;:&quot;6a4379317010f5f14ddf4cd5&quot;,&quot;displayName&quot;:&quot;Al Amin-HR&quot;,&quot;emailAddress&quot;:&quot;mohammadalamin.cse@gmail.com&quot;,&quot;isVerified&quot;:true,&quot;jiraId&quot;:&quot;&quot;,&quot;trelloId&quot;:&quot;&quot;,&quot;githubUserName&quot;:&quot;&quot;,&quot;isInvited&quot;:true,&quot;isDisabled&quot;:false,&quot;avatarUrls&quot;:&quot;https://i.ibb.co/6J1Tn7Xc/user-8664801.png&quot;,&quot;joiningDate&quot;:&quot;2026-06-30T00:00:00.000Z&quot;,&quot;createdAt&quot;:&quot;2026-06-30T08:07:13.057Z&quot;,&quot;updatedAt&quot;:&quot;2026-07-02T02:40:22.235Z&quot;,&quot;__v&quot;:0,&quot;departmentId&quot;:&quot;69a16a8e90f6056da4faa747&quot;,&quot;designation&quot;:&quot;No designation&quot;,&quot;hasOrganization&quot;:true,&quot;role&quot;:&quot;hr&quot;},&quot;accessToken&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsImlhdCI6MTc4Mjk4NzQwNCwiZXhwIjoyMzgyOTg3NDA0fQ.jCP2Z06EWg5LkB-QDf0a5LqrYBXyrMYPTBp-yAvet58&quot;,&quot;refreshToken&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsInNlc3Npb25JZCI6IjZhNDYzYThjZmFlYjM3ZGUwYmY2Yzc3MSIsImlhdCI6MTc4Mjk4NzQwNCwiZXhwIjo2MTc4Mjk4NzQwNH0.aAEe_Xw1Dquo_7sf0fpSYZ9DSnCP6DpzwqspfxWtBWM&quot;}</pre></td>
+        <td>—</td>
+      </tr>
+
+      <tr class="passed">
+        <td>
+          <div class="test-title">Verify API validation for invalid email format</div>
+          <div class="test-id">TC_017 · row 18</div>
+          <div class="test-id">Hoppscotch: cmr38yina04z111tksdm4e7hd</div>
+        </td>
+        <td>API</td>
+        <td><span class="badge pass">Pass</span></td>
+        <td><pre>{&quot;emailAddress&quot;:&quot;testgmail.com&quot;,&quot;password&quot;:&quot;Samanta123@&quot;}</pre></td>
+        <td><pre>status in: 400, 422
+error contains: email
+token: absent
+sheet: API should return invalid email format error</pre></td>
+        <td><pre>HTTP 400
+{&quot;message&quot;:[&quot;Email is not valid&quot;],&quot;error&quot;:&quot;Bad Request&quot;,&quot;statusCode&quot;:400}</pre></td>
+        <td>—</td>
+      </tr>
+
+      <tr class="passed">
+        <td>
+          <div class="test-title">Verify API fails for wrong credentials</div>
+          <div class="test-id">TC_018 · row 19</div>
+          <div class="test-id">Hoppscotch: cmr38yj7j04z211tk4sa8y64l</div>
+        </td>
+        <td>API</td>
+        <td><span class="badge pass">Pass</span></td>
+        <td><pre>{&quot;emailAddress&quot;:&quot;mohammadalamin.cse@gmail.com&quot;,&quot;password&quot;:&quot;Samddff123@&quot;}</pre></td>
+        <td><pre>status in: 400, 401, 403
+error contains: credential|invalid|unauthorized|exist|not found
+token: absent
+sheet: API should return unauthorized or invalid credentials error</pre></td>
+        <td><pre>HTTP 400
+{&quot;message&quot;:&quot;Invalid Credentials&quot;,&quot;error&quot;:&quot;Bad Request&quot;,&quot;statusCode&quot;:400}</pre></td>
+        <td>—</td>
+      </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

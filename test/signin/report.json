@@ -1,0 +1,362 @@
+{
+  "generated_at": "2026-07-02T10:16:49.818Z",
+  "summary": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0
+  },
+  "results": [
+    {
+      "test_id": "TC_010",
+      "row_number": 11,
+      "category": "Both",
+      "passed": true,
+      "failures": [],
+      "payload": {
+        "emailAddress": "mohammadalamin.cse@gmail.com",
+        "password": "Samanta123@"
+      },
+      "expected": {
+        "status": null,
+        "error": null,
+        "token": "present",
+        "accept_statuses": [
+          200,
+          201
+        ]
+      },
+      "hoppscotch_request_id": "cmr38yenx04yu11tkvmj9lmvz",
+      "response": {
+        "status_code": 201,
+        "body": {
+          "userInfo": {
+            "_id": "6a4379317010f5f14ddf4cd5",
+            "displayName": "Al Amin-HR",
+            "emailAddress": "mohammadalamin.cse@gmail.com",
+            "isVerified": true,
+            "jiraId": "",
+            "trelloId": "",
+            "githubUserName": "",
+            "isInvited": true,
+            "isDisabled": false,
+            "avatarUrls": "https://i.ibb.co/6J1Tn7Xc/user-8664801.png",
+            "joiningDate": "2026-06-30T00:00:00.000Z",
+            "createdAt": "2026-06-30T08:07:13.057Z",
+            "updatedAt": "2026-07-02T02:40:22.235Z",
+            "__v": 0,
+            "departmentId": "69a16a8e90f6056da4faa747",
+            "designation": "No designation",
+            "hasOrganization": true,
+            "role": "hr"
+          },
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsImlhdCI6MTc4Mjk4NzM5MSwiZXhwIjoyMzgyOTg3MzkxfQ.P0j_51h9-oOhzS6jc4F3nFKKb1GGlpxfOJsQ80nTJ4c",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsInNlc3Npb25JZCI6IjZhNDYzYTdmZmFlYjM3ZGUwYmY2Yzc0ZCIsImlhdCI6MTc4Mjk4NzM5MSwiZXhwIjo2MTc4Mjk4NzM5MX0.vOg7Jdytsv6cWD7BGfxVsQSRBuQtjkpjxShuiTH9PLk"
+        },
+        "error": null
+      }
+    },
+    {
+      "test_id": "TC_011",
+      "row_number": 12,
+      "category": "Both",
+      "passed": true,
+      "failures": [],
+      "payload": {
+        "emailAddress": "mohammadalamin.cse@gmail.com",
+        "password": "Samanta12##"
+      },
+      "expected": {
+        "status": null,
+        "error": null,
+        "token": "absent",
+        "accept_statuses": [
+          400,
+          401,
+          403
+        ]
+      },
+      "hoppscotch_request_id": "cmr38yf8704yv11tk946xqx5w",
+      "response": {
+        "status_code": 400,
+        "body": {
+          "message": "Invalid Credentials",
+          "error": "Bad Request",
+          "statusCode": 400
+        },
+        "error": null
+      }
+    },
+    {
+      "test_id": "TC_012",
+      "row_number": 13,
+      "category": "Both",
+      "passed": true,
+      "failures": [],
+      "payload": {
+        "emailAddress": "dayipej887@asitrai.com",
+        "password": "Samanta123@"
+      },
+      "expected": {
+        "status": null,
+        "error": "credential|invalid|unauthorized|exist|not found",
+        "token": "absent",
+        "accept_statuses": [
+          400,
+          401,
+          403
+        ]
+      },
+      "hoppscotch_request_id": "cmr38yft604yw11tk8ikm78pc",
+      "response": {
+        "status_code": 400,
+        "body": {
+          "message": "User does not exist",
+          "error": "Bad Request",
+          "statusCode": 400
+        },
+        "error": null
+      }
+    },
+    {
+      "test_id": "TC_013",
+      "row_number": 14,
+      "category": "Both",
+      "passed": true,
+      "failures": [],
+      "payload": {
+        "emailAddress": "mohammadalamin.cse@gmail.com",
+        "password": "Samanta123@"
+      },
+      "expected": {
+        "status": null,
+        "error": null,
+        "token": "present",
+        "accept_statuses": [
+          200,
+          201
+        ]
+      },
+      "hoppscotch_request_id": "cmr38ygdi04yx11tkpoepncnl",
+      "response": {
+        "status_code": 201,
+        "body": {
+          "userInfo": {
+            "_id": "6a4379317010f5f14ddf4cd5",
+            "displayName": "Al Amin-HR",
+            "emailAddress": "mohammadalamin.cse@gmail.com",
+            "isVerified": true,
+            "jiraId": "",
+            "trelloId": "",
+            "githubUserName": "",
+            "isInvited": true,
+            "isDisabled": false,
+            "avatarUrls": "https://i.ibb.co/6J1Tn7Xc/user-8664801.png",
+            "joiningDate": "2026-06-30T00:00:00.000Z",
+            "createdAt": "2026-06-30T08:07:13.057Z",
+            "updatedAt": "2026-07-02T02:40:22.235Z",
+            "__v": 0,
+            "departmentId": "69a16a8e90f6056da4faa747",
+            "designation": "No designation",
+            "hasOrganization": true,
+            "role": "hr"
+          },
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsImlhdCI6MTc4Mjk4NzM5NywiZXhwIjoyMzgyOTg3Mzk3fQ.6BBKBgstcR_BX157pbJfIzWarO2ZaLOSxY19z-TPNsg",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsInNlc3Npb25JZCI6IjZhNDYzYTg1ZmFlYjM3ZGUwYmY2Yzc1YSIsImlhdCI6MTc4Mjk4NzM5NywiZXhwIjo2MTc4Mjk4NzM5N30.Ku-WAjtBz2AR3t8SYVUC6iqZtRZWXYdj6DXGGTCRiWU"
+        },
+        "error": null
+      }
+    },
+    {
+      "test_id": "TC_014",
+      "row_number": 15,
+      "category": "Both",
+      "passed": true,
+      "failures": [],
+      "payload": {
+        "emailAddress": "mohammadalamin.cse@gmail.com",
+        "password": "Samanta12##"
+      },
+      "expected": {
+        "status": null,
+        "error": null,
+        "token": "absent",
+        "accept_statuses": [
+          400,
+          401,
+          403
+        ]
+      },
+      "hoppscotch_request_id": "cmr38ygxo04yy11tk6mbal1al",
+      "response": {
+        "status_code": 400,
+        "body": {
+          "message": "Invalid Credentials",
+          "error": "Bad Request",
+          "statusCode": 400
+        },
+        "error": null
+      }
+    },
+    {
+      "test_id": "TC_015",
+      "row_number": 16,
+      "category": "Both",
+      "passed": true,
+      "failures": [],
+      "payload": {
+        "emailAddress": "mohammadalamin.cse@gmail.com",
+        "password": "Samanta123@"
+      },
+      "expected": {
+        "status": null,
+        "error": null,
+        "token": "present",
+        "accept_statuses": [
+          200,
+          201
+        ]
+      },
+      "hoppscotch_request_id": "cmr38yhic04yz11tk1eib5hcc",
+      "response": {
+        "status_code": 201,
+        "body": {
+          "userInfo": {
+            "_id": "6a4379317010f5f14ddf4cd5",
+            "displayName": "Al Amin-HR",
+            "emailAddress": "mohammadalamin.cse@gmail.com",
+            "isVerified": true,
+            "jiraId": "",
+            "trelloId": "",
+            "githubUserName": "",
+            "isInvited": true,
+            "isDisabled": false,
+            "avatarUrls": "https://i.ibb.co/6J1Tn7Xc/user-8664801.png",
+            "joiningDate": "2026-06-30T00:00:00.000Z",
+            "createdAt": "2026-06-30T08:07:13.057Z",
+            "updatedAt": "2026-07-02T02:40:22.235Z",
+            "__v": 0,
+            "departmentId": "69a16a8e90f6056da4faa747",
+            "designation": "No designation",
+            "hasOrganization": true,
+            "role": "hr"
+          },
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsImlhdCI6MTc4Mjk4NzQwMSwiZXhwIjoyMzgyOTg3NDAxfQ.VQf6L91V4YmJzCjeF09REGIBX-lDLSUBP8TpdguC0O8",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsInNlc3Npb25JZCI6IjZhNDYzYTg5ZmFlYjM3ZGUwYmY2Yzc2NiIsImlhdCI6MTc4Mjk4NzQwMSwiZXhwIjo2MTc4Mjk4NzQwMX0.vQ8xxPwNpWsVoQ6pyW7k6xwtNhki73Cbxqtd_kqC8rU"
+        },
+        "error": null
+      }
+    },
+    {
+      "test_id": "TC_016",
+      "row_number": 17,
+      "category": "API",
+      "passed": true,
+      "failures": [],
+      "payload": {
+        "emailAddress": "mohammadalamin.cse@gmail.com",
+        "password": "Samanta123@"
+      },
+      "expected": {
+        "status": null,
+        "error": null,
+        "token": "present",
+        "accept_statuses": [
+          200,
+          201
+        ]
+      },
+      "hoppscotch_request_id": "cmr38yi3304z011tkrkv69atg",
+      "response": {
+        "status_code": 201,
+        "body": {
+          "userInfo": {
+            "_id": "6a4379317010f5f14ddf4cd5",
+            "displayName": "Al Amin-HR",
+            "emailAddress": "mohammadalamin.cse@gmail.com",
+            "isVerified": true,
+            "jiraId": "",
+            "trelloId": "",
+            "githubUserName": "",
+            "isInvited": true,
+            "isDisabled": false,
+            "avatarUrls": "https://i.ibb.co/6J1Tn7Xc/user-8664801.png",
+            "joiningDate": "2026-06-30T00:00:00.000Z",
+            "createdAt": "2026-06-30T08:07:13.057Z",
+            "updatedAt": "2026-07-02T02:40:22.235Z",
+            "__v": 0,
+            "departmentId": "69a16a8e90f6056da4faa747",
+            "designation": "No designation",
+            "hasOrganization": true,
+            "role": "hr"
+          },
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsImlhdCI6MTc4Mjk4NzQwNCwiZXhwIjoyMzgyOTg3NDA0fQ.jCP2Z06EWg5LkB-QDf0a5LqrYBXyrMYPTBp-yAvet58",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTQzNzkzMTcwMTBmNWYxNGRkZjRjZDUiLCJlbWFpbCI6Im1vaGFtbWFkYWxhbWluLmNzZUBnbWFpbC5jb20iLCJvcmdhbml6YXRpb25JZCI6IjY5NjczMjY2NWJiZGExYzk2MGQ5NGI3YyIsInNlc3Npb25JZCI6IjZhNDYzYThjZmFlYjM3ZGUwYmY2Yzc3MSIsImlhdCI6MTc4Mjk4NzQwNCwiZXhwIjo2MTc4Mjk4NzQwNH0.aAEe_Xw1Dquo_7sf0fpSYZ9DSnCP6DpzwqspfxWtBWM"
+        },
+        "error": null
+      }
+    },
+    {
+      "test_id": "TC_017",
+      "row_number": 18,
+      "category": "API",
+      "passed": true,
+      "failures": [],
+      "payload": {
+        "emailAddress": "testgmail.com",
+        "password": "Samanta123@"
+      },
+      "expected": {
+        "status": null,
+        "error": "email",
+        "token": "absent",
+        "accept_statuses": [
+          400,
+          422
+        ]
+      },
+      "hoppscotch_request_id": "cmr38yina04z111tksdm4e7hd",
+      "response": {
+        "status_code": 400,
+        "body": {
+          "message": [
+            "Email is not valid"
+          ],
+          "error": "Bad Request",
+          "statusCode": 400
+        },
+        "error": null
+      }
+    },
+    {
+      "test_id": "TC_018",
+      "row_number": 19,
+      "category": "API",
+      "passed": true,
+      "failures": [],
+      "payload": {
+        "emailAddress": "mohammadalamin.cse@gmail.com",
+        "password": "Samddff123@"
+      },
+      "expected": {
+        "status": null,
+        "error": "credential|invalid|unauthorized|exist|not found",
+        "token": "absent",
+        "accept_statuses": [
+          400,
+          401,
+          403
+        ]
+      },
+      "hoppscotch_request_id": "cmr38yj7j04z211tk4sa8y64l",
+      "response": {
+        "status_code": 400,
+        "body": {
+          "message": "Invalid Credentials",
+          "error": "Bad Request",
+          "statusCode": 400
+        },
+        "error": null
+      }
+    }
+  ]
+}
