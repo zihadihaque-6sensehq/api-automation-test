@@ -1,6 +1,7 @@
 import fs from "fs";
 import { google } from "googleapis";
 import type { Settings } from "./config.js";
+import { pickRecordField } from "./sheetColumnUtils.js";
 
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
 
@@ -8,10 +9,42 @@ export interface TestCase {
   rowNumber: number;
   testId: string;
   category: string;
+  endpoint: string;
+  queryParameters: string;
   testData: string;
   expectedResult: string;
+  apiStatus: string;
   status: string;
   raw: Record<string, string>;
+}
+
+function queueStatusValues(): Set<string> {
+  const raw =
+    process.env.AGENT_QUEUE_API_STATUSES ??
+    "Not_implemented,Not Implemented,not_implemented,Not-implemented";
+  return new Set(
+    raw
+      .split(",")
+      .map((part) => part.trim().toLowerCase())
+      .filter(Boolean)
+  );
+}
+
+function normalizeApiStatus(value: string): string {
+  return (value || "").trim().toLowerCase().replace(/[\s-]+/g, "_");
+}
+
+export function isQueuedApiTest(apiStatus: string): boolean {
+  const trimmed = (apiStatus || "").trim();
+  if (!trimmed) return true;
+
+  const normalized = trimmed.toLowerCase();
+  const slug = normalizeApiStatus(trimmed);
+
+  if (queueStatusValues().has(normalized)) return true;
+  if (slug === "not_implemented") return true;
+
+  return false;
 }
 
 export function isBackendCategory(category: string, allowed: string[]): boolean {
@@ -31,7 +64,7 @@ export class SheetClient {
 
   async connect(): Promise<Record<string, unknown>> {
     const rows = await this.getRows();
-    const headers = this.headerMap();
+    const headers = await this.headerMap();
     return {
       spreadsheet_id: this.settings.spreadsheetId,
       worksheet: this.settings.worksheetName,
@@ -39,6 +72,18 @@ export class SheetClient {
       columns: Object.keys(headers),
       row_count: rows.length,
     };
+  }
+
+  async listWorksheets(): Promise<string[]> {
+    const sheets = await this.getSheetsApi();
+    const response = await sheets.spreadsheets.get({
+      spreadsheetId: this.settings.spreadsheetId,
+      fields: "sheets.properties.title",
+    });
+
+    return (response.data.sheets ?? [])
+      .map((sheet) => sheet.properties?.title?.trim() ?? "")
+      .filter(Boolean);
   }
 
   async fetchAllTests(): Promise<TestCase[]> {
@@ -57,8 +102,14 @@ export class SheetClient {
         rowNumber: this.settings.headerRow + index + 1,
         testId,
         category: record[this.settings.sheetColumns.category] ?? "",
+        endpoint: pickRecordField(record, this.settings.sheetColumns.endpointColumns),
+        queryParameters: pickRecordField(
+          record,
+          this.settings.sheetColumns.queryParameterColumns
+        ),
         testData: record[this.settings.sheetColumns.testData] ?? "",
         expectedResult: record[this.settings.sheetColumns.expectedResult] ?? "",
+        apiStatus: record[this.settings.sheetColumns.apiStatus] ?? "",
         status: record[this.settings.sheetColumns.readStatus] ?? "",
         raw: record,
       });
@@ -74,6 +125,21 @@ export class SheetClient {
     );
   }
 
+  async fetchPendingApiTests(processAll = false): Promise<TestCase[]> {
+    const apiTests = await this.fetchApiTests();
+    if (processAll) return apiTests;
+    return apiTests.filter((test) => isQueuedApiTest(test.apiStatus));
+  }
+
+  async getWorksheetRows(worksheetName: string): Promise<string[][]> {
+    const sheets = await this.getSheetsApi();
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: this.settings.spreadsheetId,
+      range: quoteWorksheetName(worksheetName),
+    });
+    return response.data.values ?? [];
+  }
+
   async countSkippedNonBackendTests(): Promise<number> {
     const all = await this.fetchAllTests();
     return all.filter(
@@ -86,37 +152,37 @@ export class SheetClient {
     passed: boolean,
     failures: string[]
   ): Promise<void> {
-    const headers = this.headerMap();
+    const headers = await this.headerMap();
 
     const apiStatus = passed ? "Passed" : "Failed";
     const commentBackend = passed ? "N/A" : failures.join("; ");
     const data: Array<{ range: string; values: string[][] }> = [];
 
     if (this.settings.sheetWriteTargets.apiStatus) {
-      const apiStatusCol = requireColumn(headers, this.settings.sheetColumns.writeApiStatus);
+      const apiStatusCol = findColumn(headers, this.settings.sheetColumns.writeApiStatus);
       data.push({
         range: sheetCellRange(this.settings.worksheetName, apiStatusCol, rowNumber),
         values: [[apiStatus]],
       });
     }
 
-    if (this.settings.sheetWriteTargets.apiAutomation) {
-      const apiAutomationCol = requireColumn(headers, this.settings.sheetColumns.writeApiAutomation);
-      data.push({
-        range: sheetCellRange(this.settings.worksheetName, apiAutomationCol, rowNumber),
-        values: [["Implemented"]],
-      });
-    }
-
     if (this.settings.sheetWriteTargets.commentBackend) {
-      const commentBackendCol = requireColumn(
-        headers,
-        this.settings.sheetColumns.writeCommentBackend
-      );
-      data.push({
-        range: sheetCellRange(this.settings.worksheetName, commentBackendCol, rowNumber),
-        values: [[commentBackend]],
-      });
+      const commentBackendCol = findColumnOptional(headers, [
+        this.settings.sheetColumns.writeCommentBackend,
+        "Comment",
+        "Comment - Backend",
+        "Backend Comment",
+      ]);
+      if (commentBackendCol) {
+        data.push({
+          range: sheetCellRange(this.settings.worksheetName, commentBackendCol, rowNumber),
+          values: [[commentBackend]],
+        });
+      } else {
+        console.warn(
+          `Column "${this.settings.sheetColumns.writeCommentBackend}" not found on "${this.settings.worksheetName}"; skipping comment write.`
+        );
+      }
     }
 
     if (!data.length) {
@@ -142,10 +208,10 @@ export class SheetClient {
     await this.updateApiTestResult(rowNumber, passed, passed ? [] : [status]);
   }
 
-  private headerMap(): Record<string, number> {
+  private async headerMap(): Promise<Record<string, number>> {
     if (this.headerMapCache) return this.headerMapCache;
 
-    const rows = this.cachedRows ?? [];
+    const rows = await this.getRows();
     const headerValues = rows[this.settings.headerRow - 1] ?? [];
     const map: Record<string, number> = {};
 
@@ -164,7 +230,7 @@ export class SheetClient {
     const sheets = await this.getSheetsApi();
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: this.settings.spreadsheetId,
-      range: this.settings.worksheetName,
+      range: quoteWorksheetName(this.settings.worksheetName),
     });
 
     this.cachedRows = response.data.values ?? [];
@@ -213,17 +279,44 @@ function columnLetter(index: number): string {
   return letters;
 }
 
-function requireColumn(headers: Record<string, number>, name: string): number {
-  const column = headers[name];
-  if (!column) {
-    throw new Error(`Column "${name}" not found in worksheet header row`);
+function findColumnOptional(
+  headers: Record<string, number>,
+  candidates: string[]
+): number | null {
+  for (const name of candidates) {
+    if (!name) continue;
+    try {
+      return findColumn(headers, name);
+    } catch {
+      // try next alias
+    }
   }
-  return column;
+  return null;
+}
+
+function findColumn(headers: Record<string, number>, name: string): number {
+  const exact = headers[name];
+  if (exact) return exact;
+
+  const target = name.trim().toLowerCase();
+  for (const [header, column] of Object.entries(headers)) {
+    if (header.trim().toLowerCase() === target) return column;
+  }
+
+  throw new Error(`Column "${name}" not found in worksheet header row`);
+}
+
+function requireColumn(headers: Record<string, number>, name: string): number {
+  return findColumn(headers, name);
+}
+
+function quoteWorksheetName(worksheetName: string): string {
+  if (worksheetName.includes(" ") || worksheetName.includes("'")) {
+    return `'${worksheetName.replace(/'/g, "''")}'`;
+  }
+  return worksheetName;
 }
 
 function sheetCellRange(worksheetName: string, columnNumber: number, rowNumber: number): string {
-  const sheetName = worksheetName.includes(" ")
-    ? `'${worksheetName.replace(/'/g, "''")}'`
-    : worksheetName;
-  return `${sheetName}!${columnLetter(columnNumber - 1)}${rowNumber}`;
+  return `${quoteWorksheetName(worksheetName)}!${columnLetter(columnNumber - 1)}${rowNumber}`;
 }

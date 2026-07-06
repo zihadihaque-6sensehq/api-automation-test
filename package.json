@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22 <25"
+  },
   "scripts": {
     "connect-sheet": "tsx src/connectSheet.ts",
+    "test-connections": "tsx src/testConnections.ts",
     "preview-tests": "tsx src/previewTests.ts",
-    "run-login-qa": "tsx src/runLoginQa.ts",
     "fetch-tests": "tsx src/fetchTests.ts",
     "hoppscotch:setup": "tsx src/hoppscotchSetup.ts",
     "hoppscotch:teams": "tsx src/hoppscotchListAllTeams.ts",
@@ -15,17 +18,15 @@
     "hoppscotch:list-collections": "tsx src/hoppscotchListAllCollections.ts",
     "hoppscotch:fetch-endpoints": "tsx src/fetchHoppscotchEndpoints.ts",
     "hoppscotch:find-collection": "tsx src/hoppscotchFindCollection.ts",
-    "hoppscotch:create-test-endpoint": "tsx src/hoppscotchCreateTestEndpoint.ts",
-    "sync-sign-in-endpoints": "tsx src/hoppscotchSyncSignInEndpoints.ts",
-    "setup-sign-in-hoppscotch": "tsx src/hoppscotchSyncSignInEndpoints.ts",
-    "run-sign-in-qa": "tsx src/runSignInQa.ts"
+    "sync:module": "tsx src/syncModule.ts",
+    "agent:poll": "tsx src/agentPoll.ts"
   },
   "dependencies": {
-    "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "googleapis": "^144.0.0"
   },
   "devDependencies": {
+    "@hoppscotch/cli": "^0.26.0",
     "@types/node": "^22.10.2",
     "agent-hoppscotch": "^1.0.24",
     "tsx": "^4.19.2",

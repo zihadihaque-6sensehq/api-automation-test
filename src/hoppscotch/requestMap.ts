@@ -1,6 +1,6 @@
 import type { HoppscotchSettings } from "./config.js";
 import { hoppscotchCliOptions } from "./config.js";
-import { requestTitleMatchesTestId } from "./signInRequests.js";
+import { requestTitleMatchesTestId } from "../engine/buildRequestSpec.js";
 import { runHoppscotchCliJson } from "./runCli.js";
 
 export interface CollectionRequest {
@@ -23,11 +23,33 @@ export function listCollectionRequests(hoppscotch: HoppscotchSettings): Collecti
   );
 }
 
+export function pickPrimaryRequestMatch(
+  matches: CollectionRequest[],
+  testId: string,
+  preferredTitle?: string
+): CollectionRequest | undefined {
+  if (!matches.length) return undefined;
+
+  if (preferredTitle) {
+    const exact = matches.find((item) => item.title === preferredTitle);
+    if (exact) return exact;
+  }
+
+  const plain = matches.find((item) => item.title.startsWith(`${testId} -`));
+  if (plain) return plain;
+
+  return matches[0];
+}
+
 export function findRequestIdForTest(
   testId: string,
-  requests: CollectionRequest[]
+  requests: CollectionRequest[],
+  worksheet?: string
 ): string | null {
-  const match = requests.find((item) => requestTitleMatchesTestId(item.title, testId));
+  const matches = requests.filter((item) =>
+    requestTitleMatchesTestId(item.title, testId, worksheet)
+  );
+  const match = pickPrimaryRequestMatch(matches, testId);
   if (match) return match.id;
 
   const legacyTitles = LEGACY_REQUEST_TITLES[testId] ?? [];

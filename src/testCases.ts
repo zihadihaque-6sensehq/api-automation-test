@@ -10,8 +10,10 @@ const COLUMN_ALIASES: Record<string, string> = {
   "Test Data": "test_data",
   "Expected Result": "expected_result",
   Category: "category",
+  "API Endpoint": "api_endpoint",
+  Endpoint: "endpoint",
   Status: "status",
-  "API Automation": "api_automation",
+  "API Status": "api_status",
   Playwright: "playwright",
   Comment: "comment",
 };

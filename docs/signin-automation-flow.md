@@ -35,24 +35,35 @@ Data flow:
 
 ## Generic Module Pattern
 
-Use this same structure for every module:
+Each **worksheet tab** in the spreadsheet is one module. No separate Modules registry tab is required.
 
-- Folder: `TEST -> <module-name>` (example: `TEST -> sign-in`)
-- Team environment: `<Module Name> - Test` (example: `Sign In - Test`)
+- Folder: `TEST -> <tab-slug>` (example: tab `Sign In` → `TEST -> sign-in`)
+- Team environment: `<Tab Name> - Test` (example: `Sign In - Test`)
 - Request URL/body use variables (no hardcoded values)
 - Common pre-request script + reusable test assertion strategy
+
+## Queue condition (what the agent picks up)
+
+A row is processed when **all** of these are true:
+
+- `Category` is `API` or `Both` (see `TEST_CATEGORIES`)
+- `API Status` is empty or `Not_implemented`
+
+After a run, the agent writes `Passed` or `Failed` to `API Status`.
+To re-run, QA sets `API Status` back to `Not_implemented`.
 
 ## One-Time Setup (QA)
 
 1. Share Google Sheet with service account email from `credentials/service-account.json`.
 2. Configure `.env` from `.env.example`.
 3. Fill:
-   - Sheet config: `SPREADSHEET_ID`, `WORKSHEET_NAME`, `HEADER_ROW`
-   - Hoppscotch config: `HOPPSCOTCH_GRAPHQL_ENDPOINT`, `HOPPSCOTCH_SESSION_COOKIE`, `HOPPSCOTCH_TEAM_ID`, `HOPPSCOTCH_COLLECTION_ID`
+   - Sheet config: `SPREADSHEET_ID`, `HEADER_ROW` (each worksheet tab is one module)
+   - Hoppscotch config: `HOPPSCOTCH_GRAPHQL_ENDPOINT`, `HOPPSCOTCH_SESSION_COOKIE`, `HOPPSCOTCH_TEAM_ID`
    - Test credentials: `EMAIL`, `PASSWORD` (or module-appropriate values)
 4. Verify:
    - `npm run connect-sheet`
-   - `npm run setup-sign-in-hoppscotch` (for Sign In example)
+   - `npm run test-connections`
+   - `npm run sync:module`
 
 ## Generic Run Flow
 
@@ -81,16 +92,14 @@ Column names are controlled from `.env`:
 - `SHEET_COL_CATEGORY`
 - `SHEET_COL_TEST_DATA`
 - `SHEET_COL_EXPECTED_RESULT`
-- `SHEET_COL_STATUS` (read only)
-- `SHEET_COL_API_STATUS` (write)
-- `SHEET_COL_API_AUTOMATION` (write)
-- `SHEET_COL_COMMENT_BACKEND` (write)
+- `SHEET_COL_STATUS` (manual QA column, read only)
+- `SHEET_COL_API_STATUS` (queue + result: Not_implemented → Passed/Failed)
+- `SHEET_COL_COMMENT` (write — failure notes)
 - `SHEET_WRITE_COLUMNS` (strict write whitelist)
 
 `SHEET_WRITE_COLUMNS` controls which columns can be changed by automation.
 Allowed values:
 - `api_status`
-- `api_automation`
 - `comment_backend`
 
 Example:
@@ -108,7 +117,7 @@ Example override:
 SHEET_COL_TEST_ID="Case ID"
 SHEET_COL_CATEGORY="Type"
 SHEET_COL_API_STATUS="Backend Status"
-SHEET_COL_COMMENT_BACKEND="Backend Notes"
+SHEET_COL_COMMENT="Notes"
 ```
 
 ## Industry-Standard Variable Strategy
@@ -119,12 +128,11 @@ SHEET_COL_COMMENT_BACKEND="Backend Notes"
 - Avoid hardcoded secrets in requests/scripts.
 - Run same collection in QA/stage/prod by switching environment values.
 
-## Commands (Sign In Example)
+## Commands
 
-- Sync environment + scripts + requests:
-  - `npm run setup-sign-in-hoppscotch`
-- Full flow (sync + run + verify + report + optional sheet update):
-  - `npm run run-sign-in-qa`
+- Sync sheet rows → Hoppscotch: `npm run sync:module`
+- Full automation loop: `npm run agent:poll`
+- Verify connections: `npm run test-connections`
 
 ## QA Prompt Templates (Reusable)
 

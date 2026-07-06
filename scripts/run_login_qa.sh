@@ -5,4 +5,4 @@ set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 mkdir -p output
-npx tsx src/runLoginQa.ts
+npx tsx src/agentPoll.ts

@@ -21,7 +21,8 @@ async function main(): Promise<number> {
       category: test.category,
       payload: buildLoginPayload(test.testData, env),
       expected: parseExpectedResult(test.expectedResult),
-      current_status: test.status || null,
+      api_status: test.apiStatus || null,
+      status: test.status || null,
     }));
 
     console.log(

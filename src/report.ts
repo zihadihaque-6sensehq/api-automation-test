@@ -19,6 +19,7 @@ export function writeHtmlReport(
     spreadsheetId?: string;
     worksheetName?: string;
     categoriesLabel?: string;
+    runner?: string;
   } = {}
 ): void {
   const summary = summarize(results);
@@ -124,6 +125,7 @@ export function writeHtmlReport(
       <h1>Login API QA Report</h1>
       <div class="meta">
         <div>Scope: backend only — Category: <strong>${escapeHtml(options.categoriesLabel ?? "API, Both")}</strong></div>
+        <div>Runner: <code>${escapeHtml(options.runner ?? "Node")}</code></div>
         <div>Endpoint: <code>${escapeHtml(loginUrl)}</code></div>
         <div>Worksheet: <code>${escapeHtml(options.worksheetName ?? "")}</code></div>
         <div>Spreadsheet: <code>${escapeHtml(options.spreadsheetId ?? "")}</code></div>

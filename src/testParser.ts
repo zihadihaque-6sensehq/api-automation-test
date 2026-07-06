@@ -117,6 +117,34 @@ function buildFromNaturalLanguage(
 function parseNaturalExpected(text: string): ExpectedAssertions {
   const lowered = (text || "").toLowerCase();
 
+  const statusCodePhrase = lowered.match(/status code should be (\d{3})/);
+  if (statusCodePhrase) {
+    return {
+      status: Number(statusCodePhrase[1]),
+      error: null,
+      token: null,
+      acceptStatuses: [],
+    };
+  }
+
+  const shouldBeStatus = lowered.match(/should be (\d{3})\s*ok\b/);
+  if (shouldBeStatus) {
+    return {
+      status: Number(shouldBeStatus[1]),
+      error: null,
+      token: null,
+      acceptStatuses: [],
+    };
+  }
+
+  if (/\b200\s*ok\b/.test(lowered) || lowered.includes("status code 200")) {
+    return { status: 200, error: null, token: null, acceptStatuses: [] };
+  }
+
+  if (/\b201\s*created\b/.test(lowered) || lowered.includes("status code 201")) {
+    return { status: 201, error: null, token: null, acceptStatuses: [] };
+  }
+
   if (
     [
       "signed in successfully",
@@ -170,31 +198,43 @@ function parseCell(raw: string): Record<string, string> {
   const text = (raw || "").trim();
   if (!text) return {};
 
-  try {
-    const data = JSON.parse(text) as unknown;
-    if (data && typeof data === "object" && !Array.isArray(data)) {
-      return Object.fromEntries(
-        Object.entries(data as Record<string, unknown>).map(([k, v]) => [k, String(v)])
-      );
-    }
-  } catch {
-    // not JSON
+  const attempts = [text];
+  if (!text.startsWith("{") && /["']?[\w]+\s*["']?\s*:/.test(text)) {
+    attempts.push(`{${text}}`);
   }
 
-  const parts = /,\s*\w+\s*:/.test(text)
-    ? text.split(/,\s*(?=\w+\s*:)/)
+  for (const candidate of attempts) {
+    try {
+      const data = JSON.parse(candidate) as unknown;
+      if (data && typeof data === "object" && !Array.isArray(data)) {
+        return Object.fromEntries(
+          Object.entries(data as Record<string, unknown>).map(([k, v]) => [
+            normalizeKey(k),
+            String(v).replace(/^"|"$/g, "").replace(/,\s*$/, "").trim(),
+          ])
+        );
+      }
+    } catch {
+      // try next
+    }
+  }
+
+  const parts = /,\s*["']?[\w]+\s*["']?\s*:/.test(text)
+    ? text.split(/,\s*(?=["']?[\w]+\s*["']?\s*:)/)
     : text.split(/\r?\n/).length ? text.split(/\r?\n/) : [text];
 
   const result: Record<string, string> = {};
   for (const part of parts) {
-    const trimmed = part.trim();
+    const trimmed = part.trim().replace(/^,+|,+$/g, "");
     if (!trimmed) continue;
     if (trimmed.includes(":")) {
-      const [key, ...rest] = trimmed.split(":");
-      result[key.trim()] = rest.join(":").trim();
+      const colonIndex = trimmed.indexOf(":");
+      const key = trimmed.slice(0, colonIndex).trim();
+      const value = trimmed.slice(colonIndex + 1).trim();
+      result[normalizeKey(key)] = value.replace(/^"|"$/g, "").replace(/\\"/g, '"').replace(/,\s*$/, "").trim();
     } else if (trimmed.includes("=")) {
       const [key, ...rest] = trimmed.split("=");
-      result[key.trim()] = rest.join("=").trim();
+      result[normalizeKey(key)] = rest.join("=").trim();
     }
   }
 

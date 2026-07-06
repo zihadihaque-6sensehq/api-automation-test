@@ -2,6 +2,7 @@
 credentials/
 output/
 node_modules/
+.node/
 dist/
 __pycache__/
 *.pyc

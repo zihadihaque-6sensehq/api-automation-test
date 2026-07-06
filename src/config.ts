@@ -27,23 +27,24 @@ export interface Settings {
     testId: string;
     fallbackTestId: string;
     category: string;
+    endpointColumns: string[];
+    queryParameterColumns: string[];
     testData: string;
     expectedResult: string;
     readStatus: string;
+    apiStatus: string;
     writeApiStatus: string;
-    writeApiAutomation: string;
     writeCommentBackend: string;
   };
   sheetWriteTargets: {
     apiStatus: boolean;
-    apiAutomation: boolean;
     commentBackend: boolean;
   };
 }
 
 export function loadSettings(envPath?: string): Settings {
   const resolvedEnvPath = envPath ?? path.join(PROJECT_ROOT, ".env");
-  config({ path: resolvedEnvPath });
+  config({ path: resolvedEnvPath, override: true });
 
   const credentials = process.env.GOOGLE_CREDENTIALS_PATH ?? "credentials/service-account.json";
   const credPath = path.isAbsolute(credentials)
@@ -56,7 +57,7 @@ export function loadSettings(envPath?: string): Settings {
 
   return {
     spreadsheetId: requireEnv("SPREADSHEET_ID"),
-    worksheetName: process.env.WORKSHEET_NAME ?? "Sign In",
+    worksheetName: parseEnvString(process.env.WORKSHEET_NAME, "Sign In"),
     headerRow: Number(process.env.HEADER_ROW ?? "5"),
     googleCredentialsPath: credPath,
     baseUrl,
@@ -75,13 +76,17 @@ export function loadSettings(envPath?: string): Settings {
       testId: (process.env.SHEET_COL_TEST_ID ?? "Test Case ID").trim(),
       fallbackTestId: (process.env.SHEET_COL_TEST_ID_FALLBACK ?? "Test Scenario").trim(),
       category: (process.env.SHEET_COL_CATEGORY ?? "Category").trim(),
+      endpointColumns: endpointColumnCandidates(),
+      queryParameterColumns: queryParameterColumnCandidates(),
       testData: (process.env.SHEET_COL_TEST_DATA ?? "Test Data").trim(),
       expectedResult: (process.env.SHEET_COL_EXPECTED_RESULT ?? "Expected Result").trim(),
       readStatus: (process.env.SHEET_COL_STATUS ?? "Status").trim(),
+      apiStatus: (process.env.SHEET_COL_API_STATUS ?? "API Status").trim(),
       writeApiStatus: (process.env.SHEET_COL_API_STATUS ?? "API Status").trim(),
-      writeApiAutomation: (process.env.SHEET_COL_API_AUTOMATION ?? "API Automation").trim(),
       writeCommentBackend: (
-        process.env.SHEET_COL_COMMENT_BACKEND ?? "Comment - Backend"
+        process.env.SHEET_COL_COMMENT_BACKEND ??
+        process.env.SHEET_COL_COMMENT ??
+        "Comment"
       ).trim(),
     },
     sheetWriteTargets: parseSheetWriteTargets(process.env.SHEET_WRITE_COLUMNS),
@@ -97,6 +102,17 @@ export function requireLoginCredentials(settings: Settings): void {
   }
 }
 
+export function parseEnvString(value: string | undefined, fallback: string): string {
+  const raw = (value ?? fallback).trim();
+  if (
+    (raw.startsWith('"') && raw.endsWith('"')) ||
+    (raw.startsWith("'") && raw.endsWith("'"))
+  ) {
+    return raw.slice(1, -1);
+  }
+  return raw;
+}
+
 function resolveOutputPath(value: string): string {
   const trimmed = value.trim();
   return path.isAbsolute(trimmed) ? trimmed : path.join(PROJECT_ROOT, trimmed);
@@ -110,10 +126,29 @@ function parseCategories(raw: string): string[] {
   return categories.length ? categories : ["API", "Both"];
 }
 
+function endpointColumnCandidates(): string[] {
+  const primary = (process.env.SHEET_COL_ENDPOINT ?? "API Endpoint").trim();
+  const fallbacks = (process.env.SHEET_COL_ENDPOINT_FALLBACK ?? "Endpoint")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  return [...new Set([primary, ...fallbacks].filter(Boolean))];
+}
+
+function queryParameterColumnCandidates(): string[] {
+  const primary = (process.env.SHEET_COL_QUERY_PARAMS ?? "Query Parameter").trim();
+  const fallbacks = (process.env.SHEET_COL_QUERY_PARAMS_FALLBACK ?? "Query Parameters,Query Params")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  return [...new Set([primary, ...fallbacks].filter(Boolean))];
+}
+
 function parseSheetWriteTargets(raw?: string): Settings["sheetWriteTargets"] {
   const defaults = {
     apiStatus: true,
-    apiAutomation: true,
     commentBackend: true,
   };
 
@@ -127,7 +162,6 @@ function parseSheetWriteTargets(raw?: string): Settings["sheetWriteTargets"] {
   const toFlag = new Set(keys);
   return {
     apiStatus: toFlag.has("api_status"),
-    apiAutomation: toFlag.has("api_automation"),
     commentBackend: toFlag.has("comment_backend"),
   };
 }
