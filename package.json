@@ -19,7 +19,8 @@
     "hoppscotch:fetch-endpoints": "tsx src/fetchHoppscotchEndpoints.ts",
     "hoppscotch:find-collection": "tsx src/hoppscotchFindCollection.ts",
     "sync:module": "tsx src/syncModule.ts",
-    "agent:poll": "tsx src/agentPoll.ts"
+    "agent:poll": "tsx src/agentPoll.ts",
+    "test": "node --import tsx --test src/**/*.test.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

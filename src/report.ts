@@ -1,7 +1,42 @@
 import fs from "fs";
 import path from "path";
-import type { TestResult } from "./runner.js";
+import type { ApiResponse, TestResult } from "./runner.js";
 import { summarize } from "./runner.js";
+
+const NO_HTTP_RESPONSE =
+  "No HTTP response (connection failed or request did not complete)";
+
+function normalizeNoResponseError(error: string): string {
+  return error.replace(/^HTTP\s+0\s*(?:[—–-]\s*)?/i, "").trim();
+}
+
+export function formatActualResponse(response: ApiResponse): string {
+  if (response.statusCode === 0) {
+    const actualParts = [NO_HTTP_RESPONSE];
+    if (response.error) {
+      const normalized = normalizeNoResponseError(response.error);
+      if (normalized) actualParts.push(normalized);
+    } else if (response.body !== null && response.body !== undefined) {
+      actualParts.push(
+        typeof response.body === "string"
+          ? response.body
+          : JSON.stringify(response.body)
+      );
+    }
+    return actualParts.join("\n");
+  }
+
+  const actualParts = [`HTTP ${response.statusCode}`];
+  if (response.error) actualParts.push(response.error);
+  else if (response.body !== null && response.body !== undefined) {
+    actualParts.push(
+      typeof response.body === "string"
+        ? response.body
+        : JSON.stringify(response.body)
+    );
+  }
+  return actualParts.join("\n");
+}
 
 function escapeHtml(value: string): string {
   return value
@@ -184,16 +219,7 @@ function resultRow(result: TestResult): string {
   expectedParts.push(`sheet: ${result.testCase.expectedResult}`);
   const expectedText = expectedParts.join("\n");
 
-  const actualParts = [`HTTP ${result.response.statusCode}`];
-  if (result.response.error) actualParts.push(result.response.error);
-  else if (result.response.body !== null && result.response.body !== undefined) {
-    actualParts.push(
-      typeof result.response.body === "string"
-        ? result.response.body
-        : JSON.stringify(result.response.body)
-    );
-  }
-  const actualText = actualParts.join("\n");
+  const actualText = formatActualResponse(result.response);
   const testTitle = result.testCase.raw["Test Case"] ?? "";
   const hoppscotchId = result.hoppscotchRequestId
     ? `\n          <div class="test-id">Hoppscotch: ${escapeHtml(result.hoppscotchRequestId)}</div>`
