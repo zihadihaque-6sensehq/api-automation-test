@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { describeHttpStatus } from "./httpStatus.js";
 import type { TestResult } from "./runner.js";
 import { summarize } from "./runner.js";
 
@@ -184,16 +185,7 @@ function resultRow(result: TestResult): string {
   expectedParts.push(`sheet: ${result.testCase.expectedResult}`);
   const expectedText = expectedParts.join("\n");
 
-  const actualParts = [`HTTP ${result.response.statusCode}`];
-  if (result.response.error) actualParts.push(result.response.error);
-  else if (result.response.body !== null && result.response.body !== undefined) {
-    actualParts.push(
-      typeof result.response.body === "string"
-        ? result.response.body
-        : JSON.stringify(result.response.body)
-    );
-  }
-  const actualText = actualParts.join("\n");
+  const actualText = formatResultActual(result);
   const testTitle = result.testCase.raw["Test Case"] ?? "";
   const hoppscotchId = result.hoppscotchRequestId
     ? `\n          <div class="test-id">Hoppscotch: ${escapeHtml(result.hoppscotchRequestId)}</div>`
@@ -212,4 +204,35 @@ function resultRow(result: TestResult): string {
         <td><pre>${escapeHtml(actualText)}</pre></td>
         <td>${details}</td>
       </tr>`;
+}
+
+export function formatResultActual(result: TestResult): string {
+  const actualParts: string[] = [];
+  if (result.response.statusCode === 0) {
+    if (result.response.error) actualParts.push(result.response.error);
+    else if (result.response.rawText) actualParts.push(result.response.rawText);
+    else actualParts.push(describeHttpStatus(0));
+  } else {
+    actualParts.push(describeHttpStatus(result.response.statusCode));
+    if (result.response.error) actualParts.push(result.response.error);
+    else if (result.response.body !== null && result.response.body !== undefined) {
+      actualParts.push(
+        typeof result.response.body === "string"
+          ? result.response.body
+          : JSON.stringify(result.response.body)
+      );
+    }
+  }
+  if (
+    result.response.statusCode === 0 &&
+    result.response.body !== null &&
+    result.response.body !== undefined
+  ) {
+    actualParts.push(
+      typeof result.response.body === "string"
+        ? result.response.body
+        : JSON.stringify(result.response.body)
+    );
+  }
+  return actualParts.join("\n");
 }

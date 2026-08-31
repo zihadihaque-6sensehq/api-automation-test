@@ -1,3 +1,4 @@
+import { NO_RESPONSE_LABEL } from "../httpStatus.js";
 import type { ExpectedAssertions } from "../testParser.js";
 
 export interface BuildHoppscotchTestScriptOptions {
@@ -58,7 +59,9 @@ export function buildHoppscotchTestScript(
       "  var apiMsg = responseError(body);",
       "  var errorName = body && body.error ? String(body.error) : '';",
       "  var expectedLine = 'HTTP ' + allowed.join(' or ');",
-      "  var statusLine = 'HTTP ' + status + (errorName ? ' (' + errorName + ')' : '');",
+      `  var noResponseLabel = '${NO_RESPONSE_LABEL.replace(/'/g, "\\'")}';`,
+      "  var statusPrefix = status === 0 ? noResponseLabel : 'HTTP ' + status;",
+      "  var statusLine = statusPrefix + (errorName ? ' (' + errorName + ')' : '');",
       "  if (apiMsg) statusLine += ': ' + apiMsg;",
       "  var actual = allowed.indexOf(status) !== -1 ? expectedLine : statusLine;",
       "  expectMatch(actual, expectedLine);",

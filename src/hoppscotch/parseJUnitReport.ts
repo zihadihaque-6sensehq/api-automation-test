@@ -1,3 +1,5 @@
+import { humanizeHttpStatusActual } from "../httpStatus.js";
+
 export interface RequestJUnitResult {
   suiteName: string;
   testId: string | null;
@@ -91,16 +93,19 @@ export function formatJUnitFailure(raw: string): string {
   const { actual, expected } = parsed;
   if (actual === expected) return raw.trim();
 
+  const humanizedActual = humanizeHttpStatusActual(actual);
+
   if (
-    actual.startsWith("HTTP ") ||
-    actual.startsWith("error:") ||
-    actual.startsWith("no ") ||
-    actual.startsWith("access token")
+    humanizedActual.startsWith("HTTP ") ||
+    humanizedActual.startsWith("No response") ||
+    humanizedActual.startsWith("error:") ||
+    humanizedActual.startsWith("no ") ||
+    humanizedActual.startsWith("access token")
   ) {
-    return `${actual} — expected ${expected}`;
+    return `${humanizedActual} — expected ${expected}`;
   }
 
-  return `Got ${actual} — expected ${expected}`;
+  return `Got ${humanizedActual} — expected ${expected}`;
 }
 
 export function formatJUnitFailures(failures: string[]): string[] {
