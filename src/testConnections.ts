@@ -1,5 +1,8 @@
+import path from "path";
+import { fileURLToPath } from "url";
 import { ensureModuleCollection, testEnvironmentName } from "./engine/ensureModuleCollection.js";
-import { loadSettings } from "./config.js";
+import { loadSettings, requireLoginCredentials } from "./config.js";
+import { loginForBearerToken } from "./engine/ensureBearerToken.js";
 import {
   loadHoppscotchSettings,
   resolveHoppscotchServerUrl,
@@ -41,18 +44,19 @@ async function checkGoogleSheet(): Promise<CheckResult> {
   }
 }
 
-async function checkApiTarget(): Promise<CheckResult> {
+export async function checkApiTarget(): Promise<CheckResult> {
   try {
     const settings = loadSettings();
-    const response = await fetch(settings.loginUrl, { method: "GET" });
+    requireLoginCredentials(settings);
+    await loginForBearerToken(settings);
     return {
-      name: "API target",
-      ok: response.status < 500,
-      detail: `${settings.loginUrl} -> HTTP ${response.status}`,
+      name: "API login",
+      ok: true,
+      detail: `${settings.loginUrl} -> login verified`,
     };
   } catch (error) {
     return {
-      name: "API target",
+      name: "API login",
       ok: false,
       detail: error instanceof Error ? error.message : String(error),
     };
@@ -229,5 +233,11 @@ async function main(): Promise<number> {
   return failed === 0 ? 0 : 1;
 }
 
-const exitCode = await main();
-process.exit(exitCode);
+const isMainModule =
+  process.argv[1] &&
+  fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+
+if (isMainModule) {
+  const exitCode = await main();
+  process.exit(exitCode);
+}
