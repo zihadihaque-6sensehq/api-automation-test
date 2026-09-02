@@ -28,11 +28,14 @@ function extractAccess(text: string): { access: EndpointAccess; remainder: strin
     .map((line) => line.trim())
     .filter(Boolean);
 
-  if (lines.length && ACCESS_PATTERN.test(lines[0])) {
-    return {
-      access: lines[0].toLowerCase() as EndpointAccess,
-      remainder: lines.slice(1).join(" ").trim(),
-    };
+  if (lines.length) {
+    const accessMatch = lines[0].match(ACCESS_PATTERN);
+    if (accessMatch) {
+      return {
+        access: accessMatch[1].toLowerCase() as EndpointAccess,
+        remainder: lines.slice(1).join(" ").trim(),
+      };
+    }
   }
 
   const inline = text.match(/^(public|protected)\s+/i);
